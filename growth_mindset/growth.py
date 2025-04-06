@@ -39,7 +39,7 @@ if uploaded_files:
             continue
 
         # display file
-        st.write("File: " + uploaded_file.name)
+        st.write("Preview the Head of the Dataframe")
         st.dataframe(df.head())
 
         # data cleaning
