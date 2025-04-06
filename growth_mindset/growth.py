@@ -25,15 +25,17 @@ st.write("This is a simple app to help you clean your data.")
 # file uploader
 uploaded_files = st.file_uploader("Choose a CSV or Excel file", type=["csv","xlsx"], accept_multiple_files=(True))
 
-if uploaded_files is not None:
-    for uploaded_file in uploaded_files:
-        # read file
-        if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith(".xlsx"):
-            df = pd.read_excel(uploaded_file)
+if uploaded_files:
+    for file in uploaded_files:
+        file_ext = os.path.splitext(file.name)[-1].lower()
+
+        if file_ext == ".csv":
+            df = pd.read_csv(file)
+      
+        elif file_ext == "xlsx":
+            df = pd.read_excel(file)
         else:
-            st.error("File type not supported. Please upload a CSV or Excel file.")
+            st.error(f"File type not supported. Please upload a CSV or Excel file.")
             continue
 
         # display file
