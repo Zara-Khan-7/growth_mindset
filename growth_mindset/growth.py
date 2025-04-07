@@ -35,7 +35,7 @@ if uploaded_files:
         elif file_ext == "xlsx":
             df = pd.read_excel(file)
         else:
-            st.error(f"File type not supported. Please upload a CSV or Excel file.")
+            st.error(f"File type not supported: {file_ext}")
             continue
 
         # display file
@@ -44,19 +44,19 @@ if uploaded_files:
 
         # data cleaning
         st.subheader("Data Cleaning")
-        if st.checkbox(f"Clean data for{file.name}"):
+        if st.checkbox(f"Clean data for {file.name}"):
             col1, col2 = st.columns(2)
+            
             with col1:
-                # remove duplicates
-                if st.button("Remove duplicates"):
+                if st.button(f"Remove duplicates from the file : {file.name}"):
                     df.drop_duplicates(inplace=True)
                     st.write("Duplicates removed.")
+                    
             with col2:
                 # fill missing values
                 if st.button(f"Fill missing values for {file.name}"):
                     numeric_cols = df.select_dtypes(includes=['number']).columns
                     df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].mean())
-                    df.dropna(inplace=True)
                     st.write("Missing values have been filled")
 
         st.subheader("Select Columns to Keep")
@@ -71,13 +71,14 @@ if uploaded_files:
 
         # Conversion Options
         st.subheader("Conversion Options")
-        conversion_type =st.radio(f"Convert {file.name} to:", ["CSV" , "Excel"], key=file.name)
+        conversion_type = st.radio(f"Convert {file.name} to:", ["CSV" , "Excel"], key=file.name)
         if st.button(f"Convert{file.name}"):
             buffer = BytesIO()
             if conversion_type == "CSV":
                 df.to.csv(buffer, index=False)
                 file_name = file.name.replace(file_ext,".csv")
                 mime_type = "text/csv"
+                
             elif conversion_type == "Excel":
                 df.to.to_excel(buffer, index=False)
                 file_name = file.name.replace(file_ext, ".xlsx")
